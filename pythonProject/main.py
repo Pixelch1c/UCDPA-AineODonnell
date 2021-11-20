@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas_datareader.data
+
 from fredapi import Fred
+fred=(api_key='52c96fa9db703fe0764c2589b15239d7')
+from pandas_datareader.data import DataReader
+from datetime import date
 
-fred = Fred(api_key='52c96fa9db703fe0764c2589b15239d7')
+freddata = Fred.get_series('')
 
-LTGBdata = fred.get_series('IRLTLT01IEM156N')
-
-print(LTGBdata.head())
-print (LTGBdata.describe())
-
+pd.read_csv()

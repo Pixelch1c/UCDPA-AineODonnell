@@ -15,9 +15,20 @@ print(freddata.describe())
 
 
 # importing csv using date column as index and sort
-nasdaq = pd.read_csv('Nasdaq.csv', parse_dates=['Date'], index_col='Date')
-sp500 = pd.read_csv('SP500.csv', parse_dates=['Date'], index_col='Date')
-dowjones = pd.read_csv('DowJones.csv', parse_dates=['Date'], index_col='Date')
+nasdaq = pd.read_csv('Nasdaq.csv',
+                     parse_dates=['Date'],
+                     index_col='Date',
+                     na_values='n/a')
+
+sp500 = pd.read_csv('SP500.csv',
+                    parse_dates=['Date'],
+                    index_col='Date',
+                    na_values='n/a')
+
+dowjones = pd.read_csv('DowJones.csv',
+                       parse_dates=['Date'],
+                       index_col='Date',
+                       na_values='n/a')
 
 print(nasdaq.head(5))
 print(sp500.head(5))
@@ -38,6 +49,7 @@ nas_sp = nasdaq.merge(sp500,
                       on='Date',
                       how='inner',
                       suffixes=('_nasdaq', '_sp500')).dropna()
+
 nas_sp_dow = nas_sp.merge(dowjones, on='Date',
                           how='inner').dropna()
 
@@ -45,10 +57,6 @@ nas_sp_dow = nas_sp.merge(dowjones, on='Date',
 nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq Val',
                                         'Value_sp500': 'SP500 Val',
                                         'Value': 'DowJones Val'})
-
-
-
-
 
 # normalising chart
 norm_nas_sp_dow = nas_sp_dow.div(nas_sp_dow.iloc[0]).mul(100)
@@ -65,11 +73,33 @@ plt.show()
 
 # saving to csv
 nas_sp_dow.to_csv('Stocks combined.csv')
+
+
+yr_index_f = nas_sp_dow.asfreq(freq='Y',
+                             method= 'ffill')
+mt_index_f = nas_sp_dow.asfreq(freq='M',
+                             method='ffill')
+yr_index_b = nas_sp_dow.asfreq(freq='Y',
+                             method='bfill')
+mt_index_b = nas_sp_dow.asfreq(freq='M',
+                             method='bfill')
+
+print([mt_index_f, yr_index_f, mt_index_b, yr_index_b])
 print(nas_sp_dow.head())
 
 
-for value in nas_sp_dow['Nasdaq Val']:
-    (nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
+mt_index_f.plot(kind='line', title='FwdFill Index Value by month')
+plt.show()
 
-def percent()
+yr_index_f.plot(kind='line', title='FwdFill Index Value by year')
+plt.show()
+
+mt_index_b.plot(kind='line', title='BwdFill Index Value by month')
+plt.show()
+
+yr_index_b.plot(kind='line', title='BwdFill Index Value by year')
+plt.show()
+
+#for value in nas_sp_dow['Nasdaq Val']:
+    #(nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
 

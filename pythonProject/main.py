@@ -8,8 +8,11 @@ from fredapi import Fred
 fred = Fred(api_key='52c96fa9db703fe0764c2589b15239d7')
 freddata = fred.get_series('BOGZ1FL073164003Q')
 
+freddata.dropna(inplace=True)
+
 print(freddata.head(5))
 print(freddata.describe())
+
 
 # importing csv using date column as index and sort
 nasdaq = pd.read_csv('Nasdaq.csv', parse_dates=['Date'], index_col='Date')
@@ -46,7 +49,8 @@ nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq Val',
 
 
 # checking graph of all 3
-nas_sp_dow.plot(kind = 'line')
+for column in nas_sp_dow.columns:
+    sns.distplot(nas_sp_dow[column], hist=False, label=column)
 plt.show()
 
 # normalising chart
@@ -56,6 +60,19 @@ norm_nas_sp_dow.plot(kind= 'line',
                      title='Normalized Stock Value')
 plt.show()
 
+# Adding Total Column
 nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
-# checking merge outcome
-print(nas_sp_dow)
+
+nas_sp_dow.plot(kind='line')
+plt.show()
+
+#saving to csv
+nas_sp_dow.to_csv('Stocks combined.csv')
+print(nas_sp_dow.head())
+
+#nas_sp_dow['Nas percentage'] =
+
+#for value in nas_sp_dow['Nasdaq Val']:
+   # (nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
+
+   # print(nas_sp_dow['Nas percentage'])

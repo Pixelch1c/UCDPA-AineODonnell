@@ -43,8 +43,7 @@ nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq Val',
                                         'Value_sp500': 'SP500 Val',
                                         'Value': 'DowJones Val'})
 
-# checking merge outcome
-print([nas_sp, nas_sp_dow])
+
 
 # checking graph of all 3
 nas_sp_dow.plot(kind = 'line')
@@ -57,4 +56,6 @@ norm_nas_sp_dow.plot(kind= 'line',
                      title='Normalized Stock Value')
 plt.show()
 
-
+nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
+# checking merge outcome
+print(nas_sp_dow)

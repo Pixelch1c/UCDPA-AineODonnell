@@ -27,7 +27,7 @@ nasdaq.info()
 sp500.info()
 dowjones.info()
 
-#checking for empty info
+# checking for empty info
 nasdaq_empty = nasdaq.isnull().sum()
 sp500_empty = sp500.isnull().sum()
 dowjones_empty = dowjones.isnull().sum()
@@ -35,9 +35,9 @@ dowjones_empty = dowjones.isnull().sum()
 print([nasdaq_empty, sp500_empty, dowjones_empty])
 
 nas_sp = nasdaq.merge(sp500,
-                          on='Date',
-                          how='inner',
-                          suffixes=('_nasdaq', '_sp500')).dropna()
+                      on='Date',
+                      how='inner',
+                      suffixes=('_nasdaq', '_sp500')).dropna()
 nas_sp_dow = nas_sp.merge(dowjones, on='Date',
                           how='inner').dropna()
 
@@ -48,10 +48,7 @@ nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq Val',
 
 
 
-# checking graph of all 3
-for column in nas_sp_dow.columns:
-    sns.distplot(nas_sp_dow[column], hist=False, label=column)
-plt.show()
+
 
 # normalising chart
 norm_nas_sp_dow = nas_sp_dow.div(nas_sp_dow.iloc[0]).mul(100)
@@ -66,13 +63,13 @@ nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
 nas_sp_dow.plot(kind='line')
 plt.show()
 
-#saving to csv
+# saving to csv
 nas_sp_dow.to_csv('Stocks combined.csv')
 print(nas_sp_dow.head())
 
-#nas_sp_dow['Nas percentage'] =
 
-#for value in nas_sp_dow['Nasdaq Val']:
-   # (nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
+for value in nas_sp_dow['Nasdaq Val']:
+    (nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
 
-   # print(nas_sp_dow['Nas percentage'])
+def percent()
+

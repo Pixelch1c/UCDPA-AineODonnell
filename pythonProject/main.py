@@ -40,6 +40,8 @@ print(sp500.head(5))
 print(dowjones.head(5))
 print("\n\n\n")
 
+
+print("Below is the info pulled from the 3 CSV's:")
 nasdaq.info()
 sp500.info()
 dowjones.info()
@@ -56,7 +58,8 @@ nas_sp = nasdaq.merge(sp500,
                       how='inner',
                       suffixes=('_nasdaq', '_sp500')).dropna()
 
-nas_sp_dow = nas_sp.merge(dowjones, on='Date',
+nas_sp_dow = nas_sp.merge(dowjones,
+                          on='Date',
                           how='inner').dropna()
 
 # renaming columns
@@ -66,9 +69,6 @@ nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq_Val',
 
 nas_sp_dow = nas_sp_dow.asfreq(freq='Y',
                              method='ffill')
-
-for index, row in nas_sp_dow.iterrows():
-    print(row['Nasdaq_Val'], row['SP500_Val'], row['DowJones_Val'])
 
 # normalising chart
 norm_nas_sp_dow = nas_sp_dow.div(nas_sp_dow.iloc[0]).mul(100)
@@ -83,54 +83,13 @@ nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
 nas_sp_dow.plot(kind='line')
 plt.show()
 
-#yr_index_f = nas_sp_dow.asfreq(freq='Y',
-                            #method= 'ffill')
-#mt_index_f = nas_sp_dow.asfreq(freq='M',
-                             #method='ffill')
-#yr_index_b = nas_sp_dow.asfreq(freq='Y',
-                            # method='bfill')
-#mt_index_b = nas_sp_dow.asfreq(freq='M',
-                            # method='bfill')
-
-# print([mt_index_f, yr_index_f, mt_index_b, yr_index_b])
-# print(nas_sp_dow.head())
-
-
-#mt_index_f.plot(kind='line', title='FwdFill Index Value by month')
-#plt.show()
-
-#yr_index_f.plot(kind='line', title='FwdFill Index Value by year')
-#plt.show()
-
-#mt_index_b.plot(kind='line', title='BwdFill Index Value by month')
-#plt.show()
-
-#yr_index_b.plot(kind='line', title='BwdFill Index Value by year')
-#plt.show()
-
-#for value in nas_sp_dow['Nasdaq Val']:
-    #(nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
-
-#nas_mean = nas_sp_dow.groupby(by='Date').mean()
-#print(nas_mean)
-
-#nas_sp_dow["shifted_nas1"] = nas_sp_dow['Nasdaq_Val'].shift(1)
-#nas_sp_dow["shifted_SP1"] = nas_sp_dow['SP500_Val'].shift(1)
-#nas_sp_dow["shifted_Dow1"] = nas_sp_dow['DowJones_Val'].shift(1)
-
-#nas_sp_dow['Nas % Change'] = nas_sp_dow['Nasdaq_Val'].pct
-#nas_sp_dow['SP500 % Change'] = nas_sp_dow['SP500_Val']
-#nas_sp_dow['Dowjones % Change'] = nas_sp_dow['DowJones_Val']
-
-#print(nas_sp_dow)
-# saving to csv
-#nas_sp_dow.to_csv('Stocks combined.csv')
-
-#nas_sp_dow['Nas % Change', 'SP500 % Change', 'Dowjones % Change'].plot(kind=line)
-#plt.show()
+nas_sp_dow = nas_sp_dow.drop(columns= 'Total')
 
 for column in nas_sp_dow:
-    sns.distplot(nas_sp_dow[column], hist=False, label=column)
+    sns.distplot(nas_sp_dow[column],
+                 hist=True,
+                 kde=True,
+                 label=column)
 
 nas_sp_dow.plot(kind='line')
 plt.show()

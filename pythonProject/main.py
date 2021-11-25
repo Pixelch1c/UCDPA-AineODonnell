@@ -70,10 +70,14 @@ nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq_Val',
 nas_sp_dow = nas_sp_dow.asfreq(freq='Y',
                              method='ffill')
 
+#initial plotting of values
+nas_sp_dow.plot(kind='line', style='--', title = 'Initial Comparison')
+plt.show()
+
 # normalising chart
 norm_nas_sp_dow = nas_sp_dow.div(nas_sp_dow.iloc[0]).mul(100)
 
-norm_nas_sp_dow.plot(kind= 'line',
+norm_nas_sp_dow.plot(kind= 'box',
                      title='Normalized Stock Value')
 plt.show()
 
@@ -83,7 +87,7 @@ nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
 nas_sp_dow.plot(kind='line')
 plt.show()
 
-nas_sp_dow = nas_sp_dow.drop(columns= 'Total')
+nas_sp_dow = nas_sp_dow.drop(columns='Total')
 
 for column in nas_sp_dow:
     sns.distplot(nas_sp_dow[column],
@@ -91,5 +95,3 @@ for column in nas_sp_dow:
                  kde=True,
                  label=column)
 
-nas_sp_dow.plot(kind='line')
-plt.show()

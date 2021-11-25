@@ -8,11 +8,14 @@ from matplotlib import style
 # connecting to an online API
 fred = Fred(api_key='52c96fa9db703fe0764c2589b15239d7')
 freddata = fred.get_series('BOGZ1FL073164003Q')
+freddataDF = fred.get_series_all_releases('BOGZ1FL073164003Q')
 
 freddata = freddata.dropna(inplace=True)
 
-print(freddata.head(5))
-print(freddata.describe())
+print("Below is the Head and Description of the FRED data pulled from an API:")
+print(freddataDF.head(5))
+print(freddataDF.describe(datetime_is_numeric=True))
+print("\n\n\n")
 
 
 # importing csv using date column as index and sort
@@ -31,9 +34,11 @@ dowjones = pd.read_csv('DowJones.csv',
                        index_col='Date',
                        na_values='n/a')
 
+print("Below is the head data pulled from 3 different CSV's representing NASDAQ, SP500 and DOWJONES:")
 print(nasdaq.head(5))
 print(sp500.head(5))
 print(dowjones.head(5))
+print("\n\n\n")
 
 nasdaq.info()
 sp500.info()

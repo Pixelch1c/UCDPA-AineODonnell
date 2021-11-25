@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from fredapi import Fred
+from matplotlib import style
 
 # connecting to an online API
 fred = Fred(api_key='52c96fa9db703fe0764c2589b15239d7')
 freddata = fred.get_series('BOGZ1FL073164003Q')
 
-freddata.dropna(inplace=True)
+freddata = freddata.dropna(inplace=True)
 
 print(freddata.head(5))
 print(freddata.describe())
@@ -57,6 +58,10 @@ nas_sp_dow = nas_sp.merge(dowjones, on='Date',
 nas_sp_dow = nas_sp_dow.rename(columns={'Value_nasdaq': 'Nasdaq_Val',
                                         'Value_sp500': 'SP500_Val',
                                         'Value': 'DowJones_Val'})
+
+nas_sp_dow = nas_sp_dow.asfreq(freq='Y',
+                             method='ffill')
+
 for index, row in nas_sp_dow.iterrows():
     print(row['Nasdaq_Val'], row['SP500_Val'], row['DowJones_Val'])
 
@@ -73,48 +78,54 @@ nas_sp_dow['Total'] = nas_sp_dow.apply(np.sum, axis=1)
 nas_sp_dow.plot(kind='line')
 plt.show()
 
-yr_index_f = nas_sp_dow.asfreq(freq='Y',
-                             method= 'ffill')
-mt_index_f = nas_sp_dow.asfreq(freq='M',
-                             method='ffill')
-yr_index_b = nas_sp_dow.asfreq(freq='Y',
-                             method='bfill')
-mt_index_b = nas_sp_dow.asfreq(freq='M',
-                             method='bfill')
+#yr_index_f = nas_sp_dow.asfreq(freq='Y',
+                            #method= 'ffill')
+#mt_index_f = nas_sp_dow.asfreq(freq='M',
+                             #method='ffill')
+#yr_index_b = nas_sp_dow.asfreq(freq='Y',
+                            # method='bfill')
+#mt_index_b = nas_sp_dow.asfreq(freq='M',
+                            # method='bfill')
 
-print([mt_index_f, yr_index_f, mt_index_b, yr_index_b])
-print(nas_sp_dow.head())
+# print([mt_index_f, yr_index_f, mt_index_b, yr_index_b])
+# print(nas_sp_dow.head())
 
 
-mt_index_f.plot(kind='line', title='FwdFill Index Value by month')
-plt.show()
+#mt_index_f.plot(kind='line', title='FwdFill Index Value by month')
+#plt.show()
 
-yr_index_f.plot(kind='line', title='FwdFill Index Value by year')
-plt.show()
+#yr_index_f.plot(kind='line', title='FwdFill Index Value by year')
+#plt.show()
 
-mt_index_b.plot(kind='line', title='BwdFill Index Value by month')
-plt.show()
+#mt_index_b.plot(kind='line', title='BwdFill Index Value by month')
+#plt.show()
 
-yr_index_b.plot(kind='line', title='BwdFill Index Value by year')
-plt.show()
+#yr_index_b.plot(kind='line', title='BwdFill Index Value by year')
+#plt.show()
 
 #for value in nas_sp_dow['Nasdaq Val']:
     #(nas_sp_dow['Nasdaq Val']*100 / nas_sp_dow["Total"])
 
-nas_mean = nas_sp_dow.groupby(by='Date').mean()
-print(nas_mean)
+#nas_mean = nas_sp_dow.groupby(by='Date').mean()
+#print(nas_mean)
 
-nas_sp_dow["shifted_nas1"] = nas_sp_dow['Nasdaq_Val'].shift(1)
-nas_sp_dow["shifted_SP1"] = nas_sp_dow['SP500_Val'].shift(1)
-nas_sp_dow["shifted_Dow1"] = nas_sp_dow['DowJones_Val'].shift(1)
+#nas_sp_dow["shifted_nas1"] = nas_sp_dow['Nasdaq_Val'].shift(1)
+#nas_sp_dow["shifted_SP1"] = nas_sp_dow['SP500_Val'].shift(1)
+#nas_sp_dow["shifted_Dow1"] = nas_sp_dow['DowJones_Val'].shift(1)
 
-nas_sp_dow['Nas % Change'] = nas_sp_dow['Nasdaq_Val'].div(nas_sp_dow["shifted_nas1"]).sub(1).mul(100)
-nas_sp_dow['SP500 % Change'] = nas_sp_dow['SP500_Val'].div(nas_sp_dow["shifted_SP1"]).sub(1).mul(100)
-nas_sp_dow['Dowjones % Change'] = nas_sp_dow['DowJones_Val'].div(nas_sp_dow["shifted_Dow1"]).sub(1).mul(100)
+#nas_sp_dow['Nas % Change'] = nas_sp_dow['Nasdaq_Val'].pct
+#nas_sp_dow['SP500 % Change'] = nas_sp_dow['SP500_Val']
+#nas_sp_dow['Dowjones % Change'] = nas_sp_dow['DowJones_Val']
 
-print(nas_sp_dow)
+#print(nas_sp_dow)
 # saving to csv
-nas_sp_dow.to_csv('Stocks combined.csv')
+#nas_sp_dow.to_csv('Stocks combined.csv')
 
-nas_sp_dow[['Nas % Change', 'SP500 % Change', 'Dowjones % Change']].plot(kind=line)
+#nas_sp_dow['Nas % Change', 'SP500 % Change', 'Dowjones % Change'].plot(kind=line)
+#plt.show()
+
+for column in nas_sp_dow:
+    sns.distplot(nas_sp_dow[column], hist=False, label=column)
+
+nas_sp_dow.plot(kind='line')
 plt.show()
